@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love ✨</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #d946ef;
+            --primary-hover: #c026d3;
+            --rose-accent: #f43f5e;
+            --bg-gradient: linear-gradient(135deg, #fdf4f7 0%, #fae8ff 50%, #fdf2f8 100%);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(255, 255, 255, 0.9);
+            --text-main: #1f1d2b;
+            --text-muted: #64748b;
+            --shadow: 0 20px 40px -15px rgba(217, 70, 239, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Background Particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -50px;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            animation: floatUp 9s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Lock Screen Overlay */
+        #lock-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(253, 244, 247, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .lock-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            padding: 45px 35px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 380px;
+            width: 100%;
+            animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .lock-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--rose-accent);
+            margin-bottom: 8px;
+        }
+
+        .lock-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .input-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--rose-accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            width: 100%;
+            box-shadow: 0 10px 20px -5px rgba(244, 63, 94, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(244, 63, 94, 0.4);
+        }
+
+        #error-msg {
+            color: var(--rose-accent);
+            margin-top: 15px;
+            font-size: 0.85srem;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Main Website Wrapper */
+        #main-content {
+            display: none;
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Header */
+        .hero {
+            text-align: center;
+            padding: 20px 0 40px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            color: var(--rose-accent);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Glass Cards */
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-box h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--rose-accent);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .letter-box p {
+            line-height: 1.9;
+            color: #334155;
+            font-size: 0.98rem;
+            margin-bottom: 15px;
+        }
+
+        /* Memories Gallery */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 12px 12px 18px 12px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .polaroid:hover {
+            transform: translateY(-6px) rotate(1deg);
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .polaroid p {
+            margin-top: 12px;
+            font-weight: 500;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Gift Interactive Box */
+        .gift-wrap {
+            text-align: center;
+        }
+
+        .gift-box {
+            font-size: 4.5rem;
+            cursor: pointer;
+            display: inline-block;
+            margin: 15px 0;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: floatBounce 3s infinite ease-in-out;
+            user-select: none;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.12) rotate(5deg);
+        }
+
+        @keyframes floatBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        #surprise {
+            display: none;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1.5px dashed var(--primary);
+            animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #surprise h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--rose-accent);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.5rem; }
+            .lock-card h2 { font-size: 1.9rem; }
+            .glass-card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Particles Container -->
+    <div class="bg-particles" id="particles-container"></div>
+
+    <!-- Section 0: Lock Screen -->
+    <div id="lock-screen">
+        <div class="lock-card">
+            <h2>Special Access</h2>
+            <p>Enter our secret passcode to unlock ❤</p>
+            <input type="password" id="passcode" class="input-box" placeholder="Passcode (e.g. 1234)">
+            <button class="btn" onclick="checkPasscode()">Unlock Experience ✨</button>
+            <p id="error-msg">Incorrect passcode.
